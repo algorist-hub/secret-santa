@@ -1,0 +1,6 @@
+@page "/not-found"
+@layout MainLayout
+
+<PageHeading TitleKey="NotFound_Title" />
+<p class="not-found-message">@L["NotFound_Message"]</p>
+<a class="link1" href="@AppRoutes.Initial.TrimStart('/')">@L["NotFound_BackLink"]</a>

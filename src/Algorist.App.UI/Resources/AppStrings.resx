@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="App_Title" xml:space="preserve">
+    <value>Amigo Presente</value>
+  </data>
+  <data name="Menu_AriaLabel" xml:space="preserve">
+    <value>Menu principal</value>
+  </data>
+  <data name="Menu_Home" xml:space="preserve">
+    <value>Início</value>
+  </data>
+  <data name="Menu_Events" xml:space="preserve">
+    <value>Eventos</value>
+  </data>
+  <data name="Menu_Friends" xml:space="preserve">
+    <value>Amigos</value>
+  </data>
+  <data name="Menu_Profile" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="Page_Home_Title" xml:space="preserve">
+    <value>Início</value>
+  </data>
+  <data name="Page_Events_Title" xml:space="preserve">
+    <value>Eventos</value>
+  </data>
+  <data name="Page_Friends_Title" xml:space="preserve">
+    <value>Amigos</value>
+  </data>
+  <data name="Page_Profile_Title" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="Page_SignIn_Title" xml:space="preserve">
+    <value>Entrar</value>
+  </data>
+  <data name="SelectLanguage_Title" xml:space="preserve">
+    <value>Selecionar idioma</value>
+  </data>
+  <data name="Common_Apply" xml:space="preserve">
+    <value>Aplicar</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Language_ptBR_Name" xml:space="preserve">
+    <value>Português do Brasil</value>
+  </data>
+  <data name="Language_en_Name" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="NotFound_Title" xml:space="preserve">
+    <value>Página não encontrada</value>
+  </data>
+  <data name="NotFound_Message" xml:space="preserve">
+    <value>A página que você procura não existe.</value>
+  </data>
+  <data name="NotFound_BackLink" xml:space="preserve">
+    <value>Ir para a tela Entrar</value>
+  </data>
+  <data name="Error_UNEXPECTED_ERROR" xml:space="preserve">
+    <value>Ocorreu um erro inesperado. Tente novamente.</value>
+  </data>
+  <data name="Error_NOT_FOUND" xml:space="preserve">
+    <value>O item solicitado não foi encontrado.</value>
+  </data>
+  <data name="Error_VALIDATION_FAILED" xml:space="preserve">
+    <value>Alguns dados informados são inválidos.</value>
+  </data>
+  <data name="Error_Unknown" xml:space="preserve">
+    <value>Algo deu errado. Tente novamente.</value>
+  </data>
+</root>

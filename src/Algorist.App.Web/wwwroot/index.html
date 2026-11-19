@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f8fd" />
+    <title>Amigo Presente</title>
+    <base href="/" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/bootstrap-icons/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="_content/Algorist.App.UI/css/app.css" />
+    <link rel="stylesheet" href="Algorist.App.Web.styles.css" />
+</head>
+
+<body>
+    <div id="app">
+        <!-- Icon-only loading indicator: shown before translated resources are available. -->
+        <div class="app-loading" role="status" aria-busy="true">
+            <span class="brandmark" aria-hidden="true">🎁</span>
+            <div class="spinner-border text-primary" aria-hidden="true"></div>
+        </div>
+    </div>
+
+    <!-- Shown before/without translated resources, so the text is bilingual. -->
+    <div id="blazor-error-ui" role="alert">
+        <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+        Ocorreu um erro inesperado. / An unexpected error has occurred.
+        <a href="." class="reload"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Recarregar / Reload</a>
+        <span class="dismiss" aria-hidden="true"><i class="bi bi-x-lg"></i></span>
+    </div>
+
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="js/platform.js"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
+</body>
+
+</html>

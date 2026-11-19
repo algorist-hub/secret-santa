@@ -1,0 +1,42 @@
+.select-language-card {
+    padding: 1.25rem;
+}
+
+.language-option {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0.85rem 0.7rem 2.4rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-botao);
+    background: var(--cor-superficie);
+}
+
+.language-option:has(.form-check-input:checked) {
+    border-color: var(--cor-primaria);
+    background: var(--cor-primaria-suave);
+}
+
+.language-option .form-check-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    color: var(--cor-texto);
+    cursor: pointer;
+    flex: 1 1 auto;
+}
+
+.language-flag {
+    width: 1.75rem;
+    height: auto;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px var(--cor-borda);
+}
+
+@media (min-width: 768px) {
+    .select-language-card {
+        padding: 1.75rem;
+    }
+}

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <UserSecretsId>a7581be5-830e-4165-be9c-adcf7e038032</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Algorist.Api.Application\Algorist.Api.Application.csproj" />
+    <ProjectReference Include="..\Algorist.Api.Infra\Algorist.Api.Infra.csproj" />
+    <ProjectReference Include="..\Algorist.Contracts\Algorist.Contracts.csproj" />
+    <ProjectReference Include="..\Algorist.App.Web\Algorist.App.Web.csproj" />
+  </ItemGroup>
+</Project>

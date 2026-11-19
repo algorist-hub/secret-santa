@@ -1,0 +1,156 @@
+/*
+ * Amigo Presente - root stylesheet.
+ * All colors, radii and shadows are declared here as CSS variables.
+ * Component styles (.razor.css) must reference these variables only.
+ */
+:root {
+    /* Colors */
+    --cor-primaria: #2678f8;
+    --cor-primaria-suave: #eaf2ff;
+    --cor-secundaria: #7a45e8;
+    --cor-sucesso: #16b889;
+    --cor-perigo: #e5484d;
+    --cor-texto: #142746;
+    --cor-texto-suave: #71819c;
+    --cor-texto-menu: #596b87;
+    --cor-texto-invertido: #ffffff;
+    --cor-fundo: #f5f8fd;
+    --cor-superficie: #ffffff;
+    --cor-borda: #e6edf7;
+    --cor-link1: #2678f8;
+    --cor-link1-hover: #1a5fcc;
+    --cor-marca-inicio: #2c8cff;
+    --cor-marca-fim: #6555ef;
+    --cor-foco: rgba(38, 120, 248, 0.35);
+
+    /* Gradients */
+    --gradiente-marca: linear-gradient(135deg, var(--cor-marca-inicio), var(--cor-marca-fim));
+
+    /* Radii */
+    --raio-cartao: 17px;
+    --raio-botao: 10px;
+    --raio-marca: 12px;
+
+    /* Shadows */
+    --sombra-cartao: 0 8px 26px rgba(35, 62, 104, 0.06);
+
+    /* Layout */
+    --largura-marca: 35px;
+
+    /* Typography */
+    --fonte-base: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+
+    /* Bootstrap integration */
+    --bs-body-bg: var(--cor-fundo);
+    --bs-body-color: var(--cor-texto);
+    --bs-body-font-family: var(--fonte-base);
+    --bs-link-color: var(--cor-link1);
+    --bs-link-hover-color: var(--cor-link1-hover);
+    --bs-border-color: var(--cor-borda);
+    --bs-primary: var(--cor-primaria);
+}
+
+html,
+body {
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    font-family: var(--fonte-base);
+}
+
+a,
+a.link1 {
+    color: var(--cor-link1);
+}
+
+a:hover,
+a.link1:hover {
+    color: var(--cor-link1-hover);
+}
+
+h1:focus {
+    outline: none;
+}
+
+.page-title {
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--cor-texto);
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--cor-primaria);
+    --bs-btn-border-color: var(--cor-primaria);
+    --bs-btn-hover-bg: var(--cor-link1-hover);
+    --bs-btn-hover-border-color: var(--cor-link1-hover);
+    --bs-btn-active-bg: var(--cor-link1-hover);
+    --bs-btn-active-border-color: var(--cor-link1-hover);
+    --bs-btn-color: var(--cor-texto-invertido);
+    border-radius: var(--raio-botao);
+}
+
+.btn-outline-secondary {
+    --bs-btn-color: var(--cor-texto-menu);
+    --bs-btn-border-color: var(--cor-borda);
+    --bs-btn-hover-bg: var(--cor-primaria-suave);
+    --bs-btn-hover-color: var(--cor-primaria);
+    --bs-btn-hover-border-color: var(--cor-borda);
+    border-radius: var(--raio-botao);
+}
+
+.form-check-input:checked {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+}
+
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem var(--cor-foco);
+}
+
+.app-card {
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-cartao);
+    box-shadow: var(--sombra-cartao);
+}
+
+/* Startup loading indicator (shown before the app renders) */
+.app-loading {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.app-loading .brandmark {
+    display: grid;
+    place-items: center;
+    width: calc(var(--largura-marca) * 2);
+    height: calc(var(--largura-marca) * 2);
+    background: var(--gradiente-marca);
+    border-radius: var(--raio-marca);
+    font-size: 2.25rem;
+}
+
+/* Unhandled error banner */
+#blazor-error-ui {
+    background: var(--cor-superficie);
+    color: var(--cor-texto);
+    border-top: 3px solid var(--cor-perigo);
+    box-shadow: var(--sombra-cartao);
+    bottom: 0;
+    display: none;
+    left: 0;
+    padding: 0.75rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 1rem;
+    top: 0.6rem;
+}

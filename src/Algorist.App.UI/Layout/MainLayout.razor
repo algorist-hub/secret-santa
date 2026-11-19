@@ -1,0 +1,36 @@
+@inherits LayoutComponentBase
+
+<div class="container-fluid">
+    <div class="row app-shell">
+        <aside class="col-12 col-md-3 col-xl-2 app-sidebar">
+            <div class="app-sidebar-inner">
+                <div class="app-brand">
+                    <span class="app-brandmark" aria-hidden="true">🎁</span>
+                    <span class="app-brand-title">@L["App_Title"]</span>
+                </div>
+                <nav class="app-nav" aria-label="@L["Menu_AriaLabel"]">
+                    <NavLink class="app-nav-item" href="@MenuHref(AppRoutes.Home)">
+                        <i class="bi bi-house-door" aria-hidden="true"></i><span>@L["Menu_Home"]</span>
+                    </NavLink>
+                    <NavLink class="app-nav-item" href="@MenuHref(AppRoutes.Events)">
+                        <i class="bi bi-calendar-event" aria-hidden="true"></i><span>@L["Menu_Events"]</span>
+                    </NavLink>
+                    <NavLink class="app-nav-item" href="@MenuHref(AppRoutes.Friends)">
+                        <i class="bi bi-people" aria-hidden="true"></i><span>@L["Menu_Friends"]</span>
+                    </NavLink>
+                    <NavLink class="app-nav-item app-nav-item-bottom" href="@MenuHref(AppRoutes.Profile)">
+                        <i class="bi bi-person-circle" aria-hidden="true"></i><span>@L["Menu_Profile"]</span>
+                    </NavLink>
+                </nav>
+            </div>
+        </aside>
+        <main class="col app-content">
+            @Body
+        </main>
+    </div>
+</div>
+
+@code {
+    // Relative links so the app also works under a non-root base path.
+    private static string MenuHref(string route) => route.TrimStart('/');
+}
