@@ -59,15 +59,12 @@ Bootstrap and Bootstrap Icons are committed under `src/Algorist.App.Web/wwwroot/
 
 ## Deployment (GitHub Actions → Azure App Service)
 
-Workflow: `.github/workflows/ci-cd.yml`. It builds and tests on every push and pull request to `main`, and deploys `Algorist.Api` on pushes to `main`.
+Workflow: `.github/workflows/main_algorist-secret-santa.yml` (created by Azure, adapted manually to this solution). It restores, builds and tests `AlgoristSecretSanta.slnx` on every push to `main`; on pushes to `main` (or a manual run on `main`) it publishes only `src/Algorist.Api` (which includes the webapp) and deploys it to the App Service `algorist-secret-santa`.
 
 Required configuration:
 
 | Where | Name | Value |
 |---|---|---|
-| GitHub secret | `AZURE_CLIENT_ID` | Client ID of the Entra ID app / managed identity with a federated credential for this repo |
-| GitHub secret | `AZURE_TENANT_ID` | Entra ID tenant ID |
-| GitHub secret | `AZURE_SUBSCRIPTION_ID` | Azure subscription ID |
-| GitHub variable | `AZURE_WEBAPP_NAME` | Name of the Azure App Service |
-| GitHub environment | `production` | Used by the deploy job (add protection rules if desired) |
+| GitHub secret | `AZUREAPPSERVICE_PUBLISHPROFILE_DDF578C816E3410489E6E536ADE99EB5` | Publish profile of the App Service (created by Azure) |
+| GitHub environment | `Production` | Used by the deploy job (add protection rules if desired) |
 | App Service setting | `MainDatabaseConnectionString` | Connection string of the Azure SQL database |
