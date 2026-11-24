@@ -1,3 +1,4 @@
+using Algorist.App.UI.Auth;
 using Algorist.App.UI.Localization;
 using Algorist.App.UI.Navigation;
 using Algorist.App.UI.Platform;
@@ -11,20 +12,21 @@ public sealed class SelectLanguageViewModel(
     ILocalStorage storage,
     ILanguageActivator activator,
     INavigationHistory history,
-    NavigationManager navigation)
+    NavigationManager navigation,
+    AuthSession session)
 {
     public IReadOnlyList<LanguageInfo> Options => SupportedLanguages.All;
 
     /// <summary>The selected option; starts as the current language (pt-BR when none is stored).</summary>
     public string SelectedCode { get; private set; } = state.Current.Code;
 
-    /// <summary>The previous screen, or the initial screen when there is none.</summary>
+    /// <summary>The previous screen, or the initial screen (Home when signed in, otherwise Sign In) when there is none.</summary>
     public string ReturnUrl
     {
         get
         {
             var previous = history.Previous;
-            return string.IsNullOrEmpty(previous) || IsSelectLanguage(previous) ? AppRoutes.Initial : previous;
+            return string.IsNullOrEmpty(previous) || IsSelectLanguage(previous) ? AppRoutes.InitialFor(session.IsSignedIn) : previous;
         }
     }
 

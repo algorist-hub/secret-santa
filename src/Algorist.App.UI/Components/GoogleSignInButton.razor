@@ -1,0 +1,46 @@
+@* "Sign in with Google": shown only when the server has a Google client and the platform can show Google sign-in. *@
+@inject PublicSettings Settings
+@inject IGoogleSignInProvider Provider
+@inject LanguageState Language
+@using Algorist.App.UI.Http
+@using Algorist.App.UI.Platform
+
+@if (_clientId is not null && !_unavailable)
+{
+    <div class="google-sign-in" role="group" aria-label="@L["SignIn_GoogleRegion"]">
+        <div class="auth-divider"><span>@L["SignIn_Or"]</span></div>
+        <div class="google-button" @ref="_container"></div>
+    </div>
+}
+
+@code {
+    private ElementReference _container;
+    private string? _clientId;
+    private bool _unavailable;
+    private bool _rendered;
+
+    /// <summary>Runs with the Google ID token after the person completes Google sign-in.</summary>
+    [Parameter, EditorRequired]
+    public EventCallback<string> OnIdToken { get; set; }
+
+    protected override async Task OnInitializedAsync() =>
+        _clientId = (await Settings.GetAsync())?.GoogleClientId;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_clientId is null || _unavailable || _rendered)
+        {
+            return;
+        }
+
+        _rendered = true;
+        if (!await Provider.RenderButtonAsync(_container, _clientId, Language.Current.Code, OnCredentialAsync))
+        {
+            _unavailable = true;
+            StateHasChanged();
+        }
+    }
+
+    // Called from outside Blazor's event handling (Google's callback), so dispatch to the renderer.
+    private Task OnCredentialAsync(string idToken) => InvokeAsync(() => OnIdToken.InvokeAsync(idToken));
+}

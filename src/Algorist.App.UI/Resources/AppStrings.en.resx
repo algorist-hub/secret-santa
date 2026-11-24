@@ -73,4 +73,193 @@
   <data name="Error_Unknown" xml:space="preserve">
     <value>Something went wrong. Please try again.</value>
   </data>
+  <data name="Error_INVALID_CREDENTIALS" xml:space="preserve">
+    <value>Email or password is incorrect.</value>
+  </data>
+  <data name="Error_TOO_MANY_ATTEMPTS" xml:space="preserve">
+    <value>Too many attempts. Please try again later.</value>
+  </data>
+  <data name="Error_GOOGLE_SIGN_IN_FAILED" xml:space="preserve">
+    <value>Could not sign in with Google. Please try again.</value>
+  </data>
+  <data name="Error_UNDERAGE" xml:space="preserve">
+    <value>You do not meet the minimum age to register.</value>
+  </data>
+  <data name="Error_EMAIL_ALREADY_REGISTERED" xml:space="preserve">
+    <value>This email is already registered. Try signing in.</value>
+  </data>
+  <data name="Error_WEAK_PASSWORD" xml:space="preserve">
+    <value>The password does not meet the security requirements.</value>
+  </data>
+  <data name="Error_INVALID_AVATAR" xml:space="preserve">
+    <value>Unsupported image. Use JPEG, PNG or WebP up to 1 MB.</value>
+  </data>
+  <data name="Error_UNAUTHORIZED" xml:space="preserve">
+    <value>Your session has expired. Please sign in again.</value>
+  </data>
+  <data name="NotFound_BackLinkHome" xml:space="preserve">
+    <value>Go to Home</value>
+  </data>
+  <data name="SignIn_Subtitle" xml:space="preserve">
+    <value>Sign in to see your events and gift lists.</value>
+  </data>
+  <data name="SignIn_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="SignIn_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="SignIn_Submit" xml:space="preserve">
+    <value>Sign In</value>
+  </data>
+  <data name="SignIn_Or" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="SignIn_NoAccount" xml:space="preserve">
+    <value>Don't have an account?</value>
+  </data>
+  <data name="SignIn_SignUp" xml:space="preserve">
+    <value>Sign Up</value>
+  </data>
+  <data name="SignIn_ChangeLanguage" xml:space="preserve">
+    <value>Change Language</value>
+  </data>
+  <data name="Common_PleaseWait" xml:space="preserve">
+    <value>Please wait…</value>
+  </data>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>This field is required.</value>
+  </data>
+  <data name="Validation_InvalidEmail" xml:space="preserve">
+    <value>Enter a valid email address.</value>
+  </data>
+  <data name="Validation_TooLong" xml:space="preserve">
+    <value>Use at most {0} characters.</value>
+  </data>
+  <data name="Error_NETWORK" xml:space="preserve">
+    <value>Could not reach the server. Check your connection and try again.</value>
+  </data>
+  <data name="SignIn_GoogleRegion" xml:space="preserve">
+    <value>Sign in with Google</value>
+  </data>
+  <data name="Page_SignUp_Title" xml:space="preserve">
+    <value>Sign Up</value>
+  </data>
+  <data name="SignUp_Subtitle" xml:space="preserve">
+    <value>Create your account to join events and gift lists.</value>
+  </data>
+  <data name="SignUp_GoogleSubtitle" xml:space="preserve">
+    <value>Finish signing up with the details from your Google account.</value>
+  </data>
+  <data name="SignUp_RequiredLegend" xml:space="preserve">
+    <value>Fields marked with * are required.</value>
+  </data>
+  <data name="SignUp_OptionalSection" xml:space="preserve">
+    <value>Optional information</value>
+  </data>
+  <data name="Common_Required" xml:space="preserve">
+    <value>(required)</value>
+  </data>
+  <data name="Common_Optional" xml:space="preserve">
+    <value>(optional)</value>
+  </data>
+  <data name="SignUp_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="SignUp_EmailFromGoogle" xml:space="preserve">
+    <value>Email confirmed by Google.</value>
+  </data>
+  <data name="SignUp_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="SignUp_DateOfBirth" xml:space="preserve">
+    <value>Date of birth</value>
+  </data>
+  <data name="SignUp_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="SignUp_ConfirmPassword" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="SignUp_PasswordRules" xml:space="preserve">
+    <value>Your password must have:</value>
+  </data>
+  <data name="PasswordRule_Length" xml:space="preserve">
+    <value>8 to 128 characters</value>
+  </data>
+  <data name="PasswordRule_Uppercase" xml:space="preserve">
+    <value>an uppercase letter</value>
+  </data>
+  <data name="PasswordRule_Lowercase" xml:space="preserve">
+    <value>a lowercase letter</value>
+  </data>
+  <data name="PasswordRule_Digit" xml:space="preserve">
+    <value>a number</value>
+  </data>
+  <data name="PasswordRule_Symbol" xml:space="preserve">
+    <value>a symbol (e.g. # ! @)</value>
+  </data>
+  <data name="PasswordRule_Met" xml:space="preserve">
+    <value>met</value>
+  </data>
+  <data name="PasswordRule_NotMet" xml:space="preserve">
+    <value>not met</value>
+  </data>
+  <data name="SignUp_PhoneNumber" xml:space="preserve">
+    <value>Phone number</value>
+  </data>
+  <data name="SignUp_Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="SignUp_Avatar" xml:space="preserve">
+    <value>Avatar</value>
+  </data>
+  <data name="SignUp_AvatarHint" xml:space="preserve">
+    <value>JPEG, PNG or WebP image.</value>
+  </data>
+  <data name="SignUp_AvatarChoose" xml:space="preserve">
+    <value>Choose image</value>
+  </data>
+  <data name="SignUp_AvatarRemove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="SignUp_AvatarPreviewAlt" xml:space="preserve">
+    <value>Avatar preview</value>
+  </data>
+  <data name="SignUp_Submit" xml:space="preserve">
+    <value>Sign Up</value>
+  </data>
+  <data name="SignUp_HaveAccount" xml:space="preserve">
+    <value>Already have an account?</value>
+  </data>
+  <data name="SignUp_BackToSignIn" xml:space="preserve">
+    <value>Sign In</value>
+  </data>
+  <data name="SignUp_GoogleExpired" xml:space="preserve">
+    <value>Your Google sign-in has expired. Please sign in with Google again.</value>
+  </data>
+  <data name="Validation_PasswordRules" xml:space="preserve">
+    <value>The password does not meet all the requirements.</value>
+  </data>
+  <data name="Validation_PasswordMismatch" xml:space="preserve">
+    <value>Passwords do not match.</value>
+  </data>
+  <data name="Validation_InvalidPhone" xml:space="preserve">
+    <value>Enter a valid phone number (8 to 15 digits).</value>
+  </data>
+  <data name="Validation_InvalidDate" xml:space="preserve">
+    <value>Enter a valid date of birth.</value>
+  </data>
+  <data name="Validation_MinimumAge" xml:space="preserve">
+    <value>You must be at least {0} years old to sign up.</value>
+  </data>
+  <data name="Validation_UnsupportedImage" xml:space="preserve">
+    <value>Unsupported image. Use JPEG, PNG or WebP.</value>
+  </data>
+  <data name="SignUp_DateOfBirthPlaceholder" xml:space="preserve">
+    <value>dd/mm/yyyy</value>
+  </data>
+  <data name="SignUp_DateOfBirthHint" xml:space="preserve">
+    <value>Format: {0}</value>
+  </data>
 </root>

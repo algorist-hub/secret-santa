@@ -1,0 +1,27 @@
+.auth-shell {
+    min-height: 100vh;
+    padding: 1.5rem 1rem 2rem;
+}
+
+.auth-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    min-width: 0;
+}
+
+.auth-card {
+    width: 100%;
+    padding: 1.5rem 1.25rem;
+}
+
+@media (min-width: 576px) {
+    .auth-shell {
+        padding-top: 3rem;
+    }
+
+    .auth-card {
+        padding: 2rem;
+    }
+}

@@ -6,6 +6,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
     <PackageReference Include="Microsoft.Extensions.Localization" />
     <PackageReference Include="Microsoft.Extensions.Http" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Algorist.Contracts\Algorist.Contracts.csproj" />

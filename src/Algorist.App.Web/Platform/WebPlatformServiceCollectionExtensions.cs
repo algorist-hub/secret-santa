@@ -13,6 +13,7 @@ internal static class WebPlatformServiceCollectionExtensions
         services.AddScoped<ILanguageActivator, ReloadLanguageActivator>();
         services.AddSingleton<IAdService, NoAdService>();
         services.AddSingleton<IBillingService, UnsupportedBillingService>();
+        services.AddScoped<IGoogleSignInProvider, GoogleIdentityServicesProvider>();
         return services;
     }
 }

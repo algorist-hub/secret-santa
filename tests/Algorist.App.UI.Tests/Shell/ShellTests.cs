@@ -42,6 +42,9 @@ public class MainLayoutTests : AppTestContext
 {
     private static readonly RenderFragment Body = b => b.AddContent(0, "content");
 
+    // The main menu is only shown to signed-in users (see LayoutTests for the signed-out shell).
+    public MainLayoutTests() => SignInAsync().GetAwaiter().GetResult();
+
     [Fact]
     public void Menu_has_four_items_in_order_with_routes_and_no_select_language()
     {
@@ -86,7 +89,6 @@ public class PageTests : AppTestContext
 {
     public static TheoryData<Type, string, string> Pages => new()
     {
-        { typeof(SignIn), "Entrar", "Sign In" },
         { typeof(Home), "Início", "Home" },
         { typeof(Events), "Eventos", "Events" },
         { typeof(Friends), "Amigos", "Friends" },
@@ -131,7 +133,7 @@ public class PageTests : AppTestContext
         Assert.Equal("The page you are looking for does not exist.", cut.Find(".not-found-message").TextContent);
         var link = cut.Find("a.link1");
         Assert.Equal("sign-in", link.GetAttribute("href"));
-        Assert.Equal("Go to Sign In", link.TextContent);
+        Assert.Equal("Go to Sign In", link.TextContent.Trim());
     }
 
     [Fact]
@@ -148,9 +150,10 @@ public class PageTests : AppTestContext
     }
 
     [Fact]
-    public void App_does_not_redirect_when_language_is_configured()
+    public async Task App_does_not_redirect_when_language_is_configured()
     {
         using var _ = new CultureScope("pt-BR");
+        await SignInAsync();
         Navigation.NavigateTo("events");
 
         Render<AppRoot>();

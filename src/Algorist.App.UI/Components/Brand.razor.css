@@ -1,0 +1,32 @@
+.app-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.25rem;
+    font-weight: 850;
+    letter-spacing: -0.7px;
+    color: var(--cor-texto);
+    padding: 0 0.5rem;
+}
+
+.app-brandmark {
+    display: grid;
+    place-items: center;
+    width: var(--largura-marca);
+    height: var(--largura-marca);
+    background: var(--gradiente-marca);
+    color: var(--cor-texto-invertido);
+    border-radius: var(--raio-marca);
+    font-size: 1.25rem;
+    flex: 0 0 auto;
+}
+
+.app-brand.app-brand-large {
+    font-size: 1.6rem;
+}
+
+.app-brand.app-brand-large .app-brandmark {
+    width: calc(var(--largura-marca) * 1.35);
+    height: calc(var(--largura-marca) * 1.35);
+    font-size: 1.6rem;
+}

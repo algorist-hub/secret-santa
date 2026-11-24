@@ -11,10 +11,10 @@ The UI lives in a shared Razor Class Library so a future .NET MAUI mobileapp can
 | Project | Purpose |
 |---|---|
 | `src/Algorist.Api` | ASP.NET Core host: API under `/api` and the webapp for every other path |
-| `src/Algorist.Api.Application` | Application layer; server-side localized texts (e.g. emails) |
-| `src/Algorist.Api.Domain` | Domain model (no dependencies) |
-| `src/Algorist.Api.Infra` | Infrastructure: EF Core `MainDbContext` (SQL Server) |
-| `src/Algorist.Contracts` | Types shared by API and client (error codes, configuration keys) |
+| `src/Algorist.Api.Application` | Application layer: use cases (sign-in, Google sign-in, sign-up, session renewal), ports, options; server-side localized texts (e.g. emails) |
+| `src/Algorist.Api.Domain` | Domain model (`User`, `UserAvatar`; no dependencies) |
+| `src/Algorist.Api.Infra` | Infrastructure: EF Core `MainDbContext` (SQL Server) and migrations, password hashing, JWT tokens, Google ID token validation |
+| `src/Algorist.Contracts` | Types shared by API and client: error codes, configuration keys, API DTOs and routes, validation rules (password, fields, minimum age, avatar) |
 | `src/Algorist.App.UI` | Razor Class Library: pages, layout, view models, client services, platform interfaces, `.resx` texts, shared CSS/images |
 | `src/Algorist.App.Web` | Blazor WebAssembly webapp: startup, `index.html`, `wwwroot/lib` (Bootstrap 5.3.9, Bootstrap Icons 1.13.2), web implementations of platform interfaces |
 | `tests/Algorist.Api.Tests` | API integration tests (xUnit + WebApplicationFactory) |
@@ -27,15 +27,57 @@ The UI lives in a shared Razor Class Library so a future .NET MAUI mobileapp can
 
 ## Run locally
 
-The server reads the connection string from the configuration key `MainDatabaseConnectionString`.
-Locally it comes from .NET user secrets (never commit it):
+The server needs these secrets. Locally they come from .NET user secrets (never commit them):
 
 ```bash
 dotnet user-secrets set MainDatabaseConnectionString "Server=(localdb)\MSSQLLocalDB;Database=AlgoristSecretSanta;Trusted_Connection=True;TrustServerCertificate=True;" --project src/Algorist.Api
+dotnet user-secrets set JwtSigningKey "<at least 32 random characters>" --project src/Algorist.Api
+dotnet user-secrets set GoogleClientId "<id>.apps.googleusercontent.com" --project src/Algorist.Api
 dotnet run --project src/Algorist.Api --launch-profile https
 ```
 
+A signing key can be generated in PowerShell with
+`[Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(48))`.
+Use a different key in each environment; changing it signs everybody out.
+
 Then open https://localhost:7180 (or http://localhost:5180).
+
+## Configuration
+
+| Key | Required | Default | Meaning |
+|---|---|---|---|
+| `MainDatabaseConnectionString` | yes (secret) | – | Main SQL Server database. Startup fails naming the key when missing. |
+| `JwtSigningKey` | yes (secret) | – | Signs authentication tokens and Google registration tickets; at least 32 characters. Startup fails naming the key when missing or short. |
+| `GoogleClientId` | no | – | Google OAuth web client ID. When absent the Sign In screen hides the Google button. |
+| `Registration:MinimumAgeYears` | no | `18` | Minimum age, in whole years, to register (must be 1 or more). |
+| `Auth:TokenLifetimeDays` | no | `60` | Lifetime of an authentication token. The app renews it on every start, so active users stay signed in. |
+| `Auth:AttemptsPerMinute` | no | `10` | Sign-in/sign-up attempts per client IP per minute before `TOO_MANY_ATTEMPTS`. |
+
+Non-secret defaults are in `src/Algorist.Api/appsettings.json`. In App Service, nested keys use a double underscore (e.g. `Registration__MinimumAgeYears`).
+
+## Authentication
+
+- Email/password and Google sign-in. Passwords are stored as salted PBKDF2 hashes (ASP.NET Core Identity's hasher).
+- The API issues a JWT (`Authorization: Bearer`). The client stores it through `ISecureTokenStorage` (web: `localStorage` key `app.auth-token`) and calls `POST /api/auth/renew` at every start.
+- Google sign-in uses Google Identity Services in the webapp (`accounts.google.com/gsi/client`, loaded only on the Sign In screen). The API validates the Google ID token; a person without an account receives a 30-minute signed registration ticket and finishes on the Sign Up screen.
+
+### Google OAuth client
+
+1. In Google Cloud Console, open **Google Auth Platform** (APIs & Services → OAuth consent screen): set the app name and contact emails, choose **External**, and publish the app when real users should sign in (scopes used: `openid`, `email`, `profile`).
+2. Create an **OAuth client ID** of type **Web application**. Authorized JavaScript origins: `https://localhost:7180`, `http://localhost:5180`, `http://localhost` and the App Service default domain. No redirect URIs are needed (popup flow).
+3. Set the client ID as `GoogleClientId` (user secrets locally, App Service setting in Azure). The client secret is not used.
+
+## Database migrations
+
+EF Core migrations live in `src/Algorist.Api.Infra/Persistence/Migrations`. The server applies pending migrations at startup (except in the `Testing` environment used by the tests), so deployments need no manual database step.
+
+```bash
+dotnet tool restore
+dotnet ef migrations add <Name> --project src/Algorist.Api.Infra --startup-project src/Algorist.Api --output-dir Persistence/Migrations
+dotnet ef database update --project src/Algorist.Api.Infra --startup-project src/Algorist.Api
+```
+
+The design-time factory reads `MainDatabaseConnectionString` from the user secrets of `Algorist.Api` or an environment variable. Review every generated migration before committing it.
 
 ## Test
 
@@ -44,6 +86,7 @@ dotnet test --solution AlgoristSecretSanta.slnx
 ```
 
 The repo opts into Microsoft.Testing.Platform in `global.json`, so the solution is passed with `--solution`.
+API tests use an in-memory SQLite database and a fake Google token validator; they never touch SQL Server or Google.
 
 ## Localization
 
@@ -68,3 +111,5 @@ Required configuration:
 | GitHub secret | `AZUREAPPSERVICE_PUBLISHPROFILE_DDF578C816E3410489E6E536ADE99EB5` | Publish profile of the App Service (created by Azure) |
 | GitHub environment | `Production` | Used by the deploy job (add protection rules if desired) |
 | App Service setting | `MainDatabaseConnectionString` | Connection string of the Azure SQL database |
+| App Service setting | `JwtSigningKey` | Token signing key (at least 32 characters, different from local) |
+| App Service setting | `GoogleClientId` | Google OAuth web client ID |

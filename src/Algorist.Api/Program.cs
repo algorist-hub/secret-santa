@@ -1,5 +1,7 @@
 using Algorist.Api.Application;
+using Algorist.Api.Application.Auth;
 using Algorist.Api.Application.Localization;
+using Algorist.Api.Auth;
 using Algorist.Api.Endpoints;
 using Algorist.Api.ErrorHandling;
 using Algorist.Api.Infra;
@@ -17,14 +19,33 @@ if (string.IsNullOrWhiteSpace(mainDatabaseConnectionString))
         "Set it as an environment variable (deployed environments) or with 'dotnet user-secrets set' (local development).");
 }
 
-builder.Services.AddApplication();
+var jwtSigningKey = builder.Configuration[ConfigurationKeys.JwtSigningKey];
+if (string.IsNullOrWhiteSpace(jwtSigningKey) || jwtSigningKey.Length < AuthOptions.MinimumSigningKeyLength)
+{
+    throw new InvalidOperationException(
+        $"Missing or too short configuration value '{ConfigurationKeys.JwtSigningKey}' " +
+        $"(at least {AuthOptions.MinimumSigningKeyLength} characters). " +
+        "Set it as an environment variable (deployed environments) or with 'dotnet user-secrets set' (local development).");
+}
+
+builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(mainDatabaseConnectionString);
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddHealthChecks();
+builder.Services.AddBearerAuthentication();
+builder.Services.AddAuthRateLimiting();
+builder.Services.AddSingleton<IEndpointModule, AuthEndpoints>();
 
 var app = builder.Build();
 
+// Bring the main database schema up to date before serving requests (tests use their own database).
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    await app.Services.MigrateMainDatabaseAsync();
+}
+
+app.UseForwardedHeaders();
 app.UseExceptionHandler();
 
 var localizationOptions = new RequestLocalizationOptions()
@@ -38,6 +59,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseRateLimiter();
 
 // Serves the webapp's static assets (including compressed, fingerprinted _framework files).
 app.MapStaticAssets();

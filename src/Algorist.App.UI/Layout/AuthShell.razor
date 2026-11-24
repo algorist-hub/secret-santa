@@ -1,0 +1,17 @@
+@* Screen frame without the main menu: brand above one centered card. *@
+
+<div class="container-fluid auth-shell">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 auth-column">
+            <Brand Class="app-brand-large auth-brand" />
+            <main class="app-card auth-card">
+                @ChildContent
+            </main>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

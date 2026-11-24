@@ -1,6 +1,9 @@
 @page "/not-found"
 @layout MainLayout
+@inject AuthSession Session
 
 <PageHeading TitleKey="NotFound_Title" />
 <p class="not-found-message">@L["NotFound_Message"]</p>
-<a class="link1" href="@AppRoutes.Initial.TrimStart('/')">@L["NotFound_BackLink"]</a>
+<a class="link1" href="@AppRoutes.Relative(AppRoutes.InitialFor(Session.IsSignedIn))">
+    @L[Session.IsSignedIn ? "NotFound_BackLinkHome" : "NotFound_BackLink"]
+</a>

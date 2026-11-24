@@ -1,0 +1,117 @@
+.auth-subtitle {
+    color: var(--cor-texto-suave);
+    margin-bottom: 1.25rem;
+}
+
+.required-legend {
+    font-size: 0.85rem;
+    color: var(--cor-texto-suave);
+}
+
+.password-rules {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--cor-texto-suave);
+}
+
+.password-rules ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.25rem 0 0;
+    display: grid;
+    gap: 0.15rem;
+}
+
+.password-rules li.met {
+    color: var(--cor-sucesso);
+}
+
+.password-rules i {
+    margin-right: 0.35rem;
+}
+
+.optional-section {
+    border-top: 1px solid var(--cor-borda);
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+}
+
+.optional-section legend {
+    font-size: 1rem;
+    font-weight: 750;
+    color: var(--cor-texto);
+    margin-bottom: 0.75rem;
+}
+
+.optional-mark {
+    font-weight: 400;
+    color: var(--cor-texto-suave);
+}
+
+.avatar-picker {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.avatar-preview {
+    width: 72px;
+    height: 72px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    background: var(--cor-primaria-suave);
+    color: var(--cor-primaria);
+    font-size: 2rem;
+}
+
+.avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+    min-width: 0;
+}
+
+.avatar-actions .form-text {
+    flex-basis: 100%;
+    margin-top: 0;
+}
+
+.sign-in-prompt {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem;
+    margin-top: 1.5rem;
+    color: var(--cor-texto-suave);
+}
+
+.sign-in-prompt .btn-link {
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.google-email {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0.65rem 0;
+    font-weight: 600;
+    color: var(--cor-texto);
+    overflow-wrap: anywhere;
+}
+
+.google-email i {
+    color: var(--cor-primaria);
+}

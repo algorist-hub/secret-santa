@@ -1,3 +1,73 @@
 @page "/sign-in"
+@layout AuthLayout
+@inject SignInViewModel Vm
+@inject AuthSession Session
+@inject NavigationManager Navigation
 
 <PageHeading TitleKey="Page_SignIn_Title" />
+<p class="auth-subtitle">@L["SignIn_Subtitle"]</p>
+
+<form class="sign-in-form" novalidate @onsubmit="Vm.SubmitAsync">
+    @if (Vm.ErrorMessage is not null)
+    {
+        <div class="alert alert-danger" role="alert" id="sign-in-error">@Vm.ErrorMessage</div>
+    }
+
+    <div class="mb-3">
+        <label for="sign-in-email" class="form-label">@L["SignIn_Email"]</label>
+        <input id="sign-in-email" type="email" inputmode="email" autocomplete="username"
+               class="form-control @(Vm.EmailError is null ? null : "is-invalid")"
+               aria-invalid="@(Vm.EmailError is not null)" aria-describedby="sign-in-email-error"
+               @bind="Vm.Email" />
+        @if (Vm.EmailError is not null)
+        {
+            <div class="invalid-feedback" id="sign-in-email-error">@Vm.EmailError</div>
+        }
+    </div>
+
+    <div class="mb-4">
+        <label for="sign-in-password" class="form-label">@L["SignIn_Password"]</label>
+        <input id="sign-in-password" type="password" autocomplete="current-password"
+               class="form-control @(Vm.PasswordError is null ? null : "is-invalid")"
+               aria-invalid="@(Vm.PasswordError is not null)" aria-describedby="sign-in-password-error"
+               @bind="Vm.Password" />
+        @if (Vm.PasswordError is not null)
+        {
+            <div class="invalid-feedback" id="sign-in-password-error">@Vm.PasswordError</div>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100" id="sign-in-submit" disabled="@Vm.IsBusy">
+        @if (Vm.IsBusy)
+        {
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            <span class="visually-hidden">@L["Common_PleaseWait"]</span>
+        }
+        @L["SignIn_Submit"]
+    </button>
+</form>
+
+<GoogleSignInButton OnIdToken="Vm.GoogleSignInAsync" />
+
+<div class="sign-up-prompt">
+    <span>@L["SignIn_NoAccount"]</span>
+    <button type="button" class="btn btn-link link1 p-0 align-baseline" id="go-sign-up" @onclick="Vm.GoToSignUp">
+        @L["SignIn_SignUp"]
+    </button>
+</div>
+
+<div class="text-center">
+    <button type="button" class="btn btn-outline-secondary btn-sm" id="change-language" @onclick="Vm.GoToSelectLanguage">
+        <i class="bi bi-translate me-1" aria-hidden="true"></i>@L["SignIn_ChangeLanguage"]
+    </button>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (Session.IsSignedIn)
+        {
+            Navigation.NavigateTo(AppRoutes.Relative(AppRoutes.Home), replace: true);
+        }
+    }
+}

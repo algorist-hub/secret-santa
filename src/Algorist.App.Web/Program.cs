@@ -1,4 +1,5 @@
 using Algorist.App.UI;
+using Algorist.App.UI.Auth;
 using Algorist.App.UI.Localization;
 using Algorist.App.Web.Platform;
 using Microsoft.AspNetCore.Components.Web;
@@ -19,5 +20,8 @@ var host = builder.Build();
 await host.Services.GetRequiredService<LanguageBootstrapper>().InitializeAsync();
 var language = host.Services.GetRequiredService<LanguageState>().Current;
 await host.Services.GetRequiredService<IJSRuntime>().InvokeVoidAsync("algoristPlatform.setDocumentLanguage", language.Code);
+
+// Restore the session before the first render (stored token renewed → Home; rejected or none → Sign In).
+await host.Services.GetRequiredService<SessionBootstrapper>().InitializeAsync();
 
 await host.RunAsync();

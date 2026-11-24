@@ -1,0 +1,187 @@
+@page "/sign-up"
+@layout AuthLayout
+@using Algorist.Contracts.Validation
+@using Microsoft.AspNetCore.Components.Forms
+@inject SignUpViewModel Vm
+@inject AuthSession Session
+@inject NavigationManager Navigation
+
+<PageHeading TitleKey="Page_SignUp_Title" />
+
+@if (!_ready)
+{
+    <div class="text-center py-4" role="status">
+        <span class="spinner-border text-primary" aria-hidden="true"></span>
+        <span class="visually-hidden">@L["Common_PleaseWait"]</span>
+    </div>
+}
+else
+{
+    <p class="auth-subtitle">@L[Vm.IsGoogle ? "SignUp_GoogleSubtitle" : "SignUp_Subtitle"]</p>
+
+    <EditForm Model="Vm.Form" OnValidSubmit="Vm.SubmitAsync" class="sign-up-form" novalidate>
+        <RulesValidator Validate="Vm.Validate" />
+
+        @if (Vm.ErrorMessage is not null)
+        {
+            <div class="alert alert-danger" role="alert" id="sign-up-error">@Vm.ErrorMessage</div>
+        }
+
+        <p class="required-legend">@L["SignUp_RequiredLegend"]</p>
+
+        @if (Vm.IsGoogle)
+        {
+            @* The Google email is shown, not edited: the account is created with the email Google confirmed. *@
+            <div class="mb-3">
+                <span class="form-label d-block" id="sign-up-email-label">@L["SignUp_Email"]</span>
+                <p class="google-email" id="sign-up-email" aria-labelledby="sign-up-email-label" aria-describedby="sign-up-email-google">
+                    <i class="bi bi-google" aria-hidden="true"></i><span>@Vm.Form.Email</span>
+                </p>
+                <div class="form-text" id="sign-up-email-google">@L["SignUp_EmailFromGoogle"]</div>
+            </div>
+        }
+        else
+        {
+            <div class="mb-3">
+                <label for="sign-up-email" class="form-label">@L["SignUp_Email"]<RequiredMark /></label>
+                <InputText id="sign-up-email" type="email" inputmode="email" autocomplete="email" class="form-control"
+                           aria-required="true" @bind-Value="Vm.Form.Email" />
+                <ValidationMessage For="() => Vm.Form.Email" class="invalid-feedback d-block" />
+            </div>
+        }
+
+        <div class="mb-3">
+            <label for="sign-up-name" class="form-label">@L["SignUp_Name"]<RequiredMark /></label>
+            <InputText id="sign-up-name" autocomplete="name" maxlength="@RegistrationRules.NameMaxLength" class="form-control"
+                       aria-required="true" @bind-Value="Vm.Form.Name" />
+            <ValidationMessage For="() => Vm.Form.Name" class="invalid-feedback d-block" />
+        </div>
+
+        <div class="mb-3">
+            <label for="sign-up-dob" class="form-label">@L["SignUp_DateOfBirth"]<RequiredMark /></label>
+            @* Typed text in the app language's day/month/year order; the native date picker would follow the browser's language. *@
+            <InputText id="sign-up-dob" inputmode="numeric" autocomplete="bday" maxlength="10" class="form-control"
+                       aria-required="true" aria-describedby="sign-up-dob-hint"
+                       placeholder="@L["SignUp_DateOfBirthPlaceholder"]" @bind-Value="Vm.Form.DateOfBirthText" />
+            <div class="form-text" id="sign-up-dob-hint">@L["SignUp_DateOfBirthHint", L["SignUp_DateOfBirthPlaceholder"]]</div>
+            <ValidationMessage For="() => Vm.Form.DateOfBirthText" class="invalid-feedback d-block" />
+        </div>
+
+        @if (!Vm.IsGoogle)
+        {
+            <div class="mb-3">
+                <label for="sign-up-password" class="form-label">@L["SignUp_Password"]<RequiredMark /></label>
+                <InputTextOnInput id="sign-up-password" type="password" autocomplete="new-password" class="form-control"
+                                  aria-required="true" aria-describedby="sign-up-password-rules" @bind-Value="Vm.Form.Password" />
+                <ValidationMessage For="() => Vm.Form.Password" class="invalid-feedback d-block" />
+                <div class="password-rules" id="sign-up-password-rules">
+                    <span>@L["SignUp_PasswordRules"]</span>
+                    <ul>
+                        @foreach (var rule in PasswordPolicy.Rules)
+                        {
+                            var met = Vm.IsPasswordRuleMet(rule);
+                            <li class="@(met ? "met" : null)" data-rule="@rule">
+                                <i class="bi @(met ? "bi-check-circle-fill" : "bi-circle")" aria-hidden="true"></i>
+                                @L[$"PasswordRule_{rule}"]
+                                <span class="visually-hidden">(@L[met ? "PasswordRule_Met" : "PasswordRule_NotMet"])</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="sign-up-confirm-password" class="form-label">@L["SignUp_ConfirmPassword"]<RequiredMark /></label>
+                <InputText id="sign-up-confirm-password" type="password" autocomplete="new-password" class="form-control"
+                           aria-required="true" @bind-Value="Vm.Form.ConfirmPassword" />
+                <ValidationMessage For="() => Vm.Form.ConfirmPassword" class="invalid-feedback d-block" />
+            </div>
+        }
+
+        <fieldset class="optional-section">
+            <legend>@L["SignUp_OptionalSection"]</legend>
+
+            <div class="mb-3">
+                <label for="sign-up-phone" class="form-label">@L["SignUp_PhoneNumber"] <span class="optional-mark">@L["Common_Optional"]</span></label>
+                <InputText id="sign-up-phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="@RegistrationRules.PhoneMaxLength"
+                           class="form-control" @bind-Value="Vm.Form.PhoneNumber" />
+                <ValidationMessage For="() => Vm.Form.PhoneNumber" class="invalid-feedback d-block" />
+            </div>
+
+            <div class="mb-3">
+                <label for="sign-up-address" class="form-label">@L["SignUp_Address"] <span class="optional-mark">@L["Common_Optional"]</span></label>
+                <InputTextArea id="sign-up-address" rows="2" autocomplete="street-address" maxlength="@RegistrationRules.AddressMaxLength"
+                               class="form-control" @bind-Value="Vm.Form.Address" />
+                <ValidationMessage For="() => Vm.Form.Address" class="invalid-feedback d-block" />
+            </div>
+
+            <div class="mb-1">
+                <span class="form-label d-block" id="sign-up-avatar-label">@L["SignUp_Avatar"] <span class="optional-mark">@L["Common_Optional"]</span></span>
+                <div class="avatar-picker">
+                    <div class="avatar-preview" aria-hidden="@(Vm.AvatarPreviewUrl is null)">
+                        @if (Vm.AvatarPreviewUrl is { } preview)
+                        {
+                            <img src="@preview" alt="@L["SignUp_AvatarPreviewAlt"]" referrerpolicy="no-referrer" />
+                        }
+                        else
+                        {
+                            <i class="bi bi-person" aria-hidden="true"></i>
+                        }
+                    </div>
+                    <div class="avatar-actions">
+                        <label class="btn btn-outline-secondary btn-sm mb-0" for="sign-up-avatar">
+                            <i class="bi bi-image me-1" aria-hidden="true"></i>@L["SignUp_AvatarChoose"]
+                        </label>
+                        <InputFile id="sign-up-avatar" class="visually-hidden" accept="@string.Join(',', AvatarRules.AllowedContentTypes)"
+                                   aria-labelledby="sign-up-avatar-label" OnChange="OnAvatarChosenAsync" />
+                        @if (Vm.AvatarPreviewUrl is not null)
+                        {
+                            <button type="button" class="btn btn-link btn-sm text-danger" id="sign-up-avatar-remove" @onclick="Vm.RemoveAvatar">
+                                @L["SignUp_AvatarRemove"]
+                            </button>
+                        }
+                        <div class="form-text">@L["SignUp_AvatarHint"]</div>
+                    </div>
+                </div>
+                @if (Vm.AvatarError is not null)
+                {
+                    <div class="invalid-feedback d-block" id="sign-up-avatar-error">@Vm.AvatarError</div>
+                }
+            </div>
+        </fieldset>
+
+        <button type="submit" class="btn btn-primary w-100 mt-3" id="sign-up-submit" disabled="@Vm.IsBusy">
+            @if (Vm.IsBusy)
+            {
+                <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                <span class="visually-hidden">@L["Common_PleaseWait"]</span>
+            }
+            @L["SignUp_Submit"]
+        </button>
+    </EditForm>
+
+    <div class="sign-in-prompt">
+        <span>@L["SignUp_HaveAccount"]</span>
+        <button type="button" class="btn btn-link link1 p-0 align-baseline" id="go-sign-in" @onclick="Vm.GoToSignIn">
+            @L["SignUp_BackToSignIn"]
+        </button>
+    </div>
+}
+
+@code {
+    private bool _ready;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Session.IsSignedIn)
+        {
+            Navigation.NavigateTo(AppRoutes.Relative(AppRoutes.Home), replace: true);
+            return;
+        }
+
+        await Vm.InitializeAsync();
+        _ready = true;
+    }
+
+    private Task OnAvatarChosenAsync(InputFileChangeEventArgs e) => Vm.SetAvatarAsync(e.File);
+}

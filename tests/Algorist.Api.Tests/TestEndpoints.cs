@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Algorist.Api.Application.Resources;
 using Algorist.Api.Endpoints;
 using Microsoft.AspNetCore.Builder;
@@ -13,10 +14,12 @@ internal sealed class TestEndpoints : IEndpointModule
     public const string ThrowPath = "/api/test/throw";
     public const string LocalizedPath = "/api/test/localized";
     public const string SecretMessage = "secret internal detail";
+    public const string MePath = "/api/test/me";
 
     public void MapEndpoints(IEndpointRouteBuilder api)
     {
         api.MapGet("/test/throw", IResult () => throw new InvalidOperationException(SecretMessage));
         api.MapGet("/test/localized", (IStringLocalizer<EmailTexts> texts) => Results.Text(texts["Email_Greeting"].Value));
+        api.MapGet("/test/me", (ClaimsPrincipal user) => Results.Text(user.FindFirst("sub")?.Value)).RequireAuthorization();
     }
 }

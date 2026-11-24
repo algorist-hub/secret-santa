@@ -1,11 +1,18 @@
 @* Root component of the app (shared by every host). *@
+@implements IDisposable
 @inject LanguageState LanguageState
 @inject NavigationManager Navigation
 @inject INavigationHistory History
+@inject AuthSession Session
 
 <Router AppAssembly="typeof(AppRoot).Assembly" NotFoundPage="typeof(Pages.NotFound)">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)">
+            <NotAuthorized>
+                <RedirectToSignIn />
+            </NotAuthorized>
+            <Authorizing />
+        </AuthorizeRouteView>
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
 </Router>
@@ -13,11 +20,24 @@
 @code {
     protected override void OnInitialized()
     {
+        Session.Changed += OnSessionChanged;
+
         // First-run language detection failed: the user must choose a language.
         if (LanguageState.SelectionRequired && !IsOnSelectLanguage())
         {
             History.ResetOnNextNavigation();
-            Navigation.NavigateTo(AppRoutes.SelectLanguage.TrimStart('/'), replace: true);
+            Navigation.NavigateTo(AppRoutes.Relative(AppRoutes.SelectLanguage), replace: true);
+        }
+    }
+
+    public void Dispose() => Session.Changed -= OnSessionChanged;
+
+    // The session ended (e.g. the API rejected the token): show Sign In.
+    private void OnSessionChanged()
+    {
+        if (!Session.IsSignedIn)
+        {
+            _ = InvokeAsync(() => Navigation.NavigateTo(AppRoutes.Relative(AppRoutes.SignIn), replace: true));
         }
     }
 

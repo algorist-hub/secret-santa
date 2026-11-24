@@ -22,6 +22,11 @@ public class ErrorMessageTranslatorTests
     [InlineData("en", ErrorCodes.NotFound, "The requested item was not found.")]
     [InlineData("pt-BR", ErrorCodes.NotFound, "O item solicitado não foi encontrado.")]
     [InlineData("en", ErrorCodes.UnexpectedError, "An unexpected error occurred. Please try again.")]
+    [InlineData("en", ErrorCodes.InvalidCredentials, "Email or password is incorrect.")]
+    [InlineData("pt-BR", ErrorCodes.InvalidCredentials, "E-mail ou senha incorretos.")]
+    [InlineData("en", ErrorCodes.TooManyAttempts, "Too many attempts. Please try again later.")]
+    [InlineData("en", ErrorCodes.EmailAlreadyRegistered, "This email is already registered. Try signing in.")]
+    [InlineData("pt-BR", ErrorCodes.Unauthorized, "Sua sessão expirou. Entre novamente.")]
     public void Known_codes_are_translated_into_the_current_language(string culture, string code, string expected)
     {
         using var _ = new CultureScope(culture);

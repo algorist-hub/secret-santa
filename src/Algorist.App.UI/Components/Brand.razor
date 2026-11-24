@@ -1,0 +1,12 @@
+@* App logo and title. *@
+
+<div class="app-brand @Class">
+    <span class="app-brandmark" aria-hidden="true">🎁</span>
+    <span class="app-brand-title">@L["App_Title"]</span>
+</div>
+
+@code {
+    /// <summary>Extra CSS classes for the container.</summary>
+    [Parameter]
+    public string? Class { get; set; }
+}
