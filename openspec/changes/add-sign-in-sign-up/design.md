@@ -39,7 +39,7 @@ New entities in `Algorist.Api.Domain/Users`, mapped in `Algorist.Api.Infra/Persi
 | `Email` | `nvarchar(254)` not null | lowercase + trimmed; **unique index** |
 | `Name` | `nvarchar(100)` not null | |
 | `DateOfBirth` | `date` not null | `DateOnly` |
-| `PhoneNumber` | `nvarchar(20)` null | |
+| `PhoneNumber` | `nvarchar(30)` null | 8–15 digits plus formatting characters |
 | `Address` | `nvarchar(300)` null | |
 | `PasswordHash` | `nvarchar(512)` null | null for Google-only accounts |
 | `GoogleSubject` | `nvarchar(255)` null | Google `sub`; **unique filtered index** `WHERE [GoogleSubject] IS NOT NULL` |
@@ -65,7 +65,8 @@ EF Core migration `AddUsers` in `Algorist.Api.Infra/Persistence/Migrations` (fir
 ### D3. Layering of the server logic
 
 - **Contracts** (`Algorist.Contracts/Auth`, `/Registration`): request/response DTOs, `PasswordPolicy`, `RegistrationRules` (email/name/phone/address limits, returning field error codes), new `ErrorCodes`: `INVALID_CREDENTIALS`, `TOO_MANY_ATTEMPTS`, `GOOGLE_SIGN_IN_FAILED`, `UNDERAGE`, `EMAIL_ALREADY_REGISTERED`, `WEAK_PASSWORD`, `INVALID_AVATAR`, `UNAUTHORIZED`. Shared with the RCL so client and server validate identically.
-- **Domain**: `User`, `UserAvatar`, `AgePolicy.IsOldEnough(DateOnly birth, DateOnly today, int minimumYears)` (birth ≤ `today.AddYears(-minimumYears)`; Feb-29 births handled by `AddYears`).
+- **Domain**: `User`, `UserAvatar`.
+- **Contracts** also holds `AgePolicy.IsOldEnough(DateOnly birth, DateOnly today, int minimumYears)` (birth ≤ `today.AddYears(-minimumYears)`; a 29 February birth reaches the age on 1 March in non-leap years), because the client must apply the same rule and the RCL cannot reference Domain.
 - **Application**: use cases `PasswordSignIn`, `GoogleSignIn`, `RegisterUser`, `RenewSession` returning a `Result<T>` with an error code; ports `IUserRepository`, `IAvatarStore`, `IPasswordHasher`, `ITokenIssuer`, `IGoogleIdTokenValidator`, `IGoogleRegistrationTicketService`; options `RegistrationOptions` and `AuthOptions`; `TimeProvider` injected for testable dates.
 - **Infra**: EF repositories, `IdentityPasswordHasher` (wraps `PasswordHasher<User>` from `Microsoft.Extensions.Identity.Core`, PBKDF2), `JwtTokenIssuer`, `GoogleIdTokenValidator` (`Google.Apis.Auth` `GoogleJsonWebSignature.ValidateAsync` with audience = `GoogleClientId`, requires `email_verified`).
 - **Api**: `AuthEndpoints` and `PublicSettingsEndpoints` modules (`IEndpointModule`), mapping `Result` errors to `ProblemResults`.
@@ -92,7 +93,7 @@ JWT (HMAC-SHA256) signed with `JwtSigningKey`; claims `sub` (user id), `email`, 
 
 - **Google registration ticket**: a JWT signed with the same key but audience `google-registration`, 30-minute lifetime, carrying Google `sub`, email, name, picture. With a ticket, sign-up takes email and Google identity from the ticket (body email ignored), requires no password, and rejects an invalid/expired ticket with `GOOGLE_SIGN_IN_FAILED`. This prevents a client from registering arbitrary emails as "Google" accounts.
 - **Google account matching**: by `GoogleSubject` first; otherwise by verified email, linking `GoogleSubject` to the existing account.
-- **Rate limiting**: `Microsoft.AspNetCore.RateLimiting` fixed-window policy `auth` (10 requests / minute / client IP) on the three anonymous auth POSTs; `OnRejected` writes 429 + `TOO_MANY_ATTEMPTS`. `UseForwardedHeaders` (X-Forwarded-For) so App Service's proxy doesn't make all clients share one IP.
+- **Rate limiting**: `Microsoft.AspNetCore.RateLimiting` fixed-window policy `auth` (`Auth:AttemptsPerMinute` requests / minute / client IP, default 10; tests raise it) on the three anonymous auth POSTs; `OnRejected` writes 429 + `TOO_MANY_ATTEMPTS`. `UseForwardedHeaders` (X-Forwarded-For) so App Service's proxy doesn't make all clients share one IP.
 - **Unique email race**: unique index violation (`DbUpdateException`) maps to `EMAIL_ALREADY_REGISTERED`.
 - **Avatar**: JSON base64 (≤ 1 MB decoded, checked against content type and magic bytes) rather than multipart, keeping one request per sign-up.
 
@@ -119,8 +120,9 @@ JWT (HMAC-SHA256) signed with `JwtSigningKey`; claims `sub` (user id), `email`, 
 
 - `SignInViewModel`, `SignUpViewModel` (RCL `ViewModels/`), tested with bUnit; pages stay thin. `AuthApiClient` wraps the HTTP calls and turns problem responses into error codes translated by `ErrorMessageTranslator`.
 - Forms use `EditForm` with a custom validator component that runs `RegistrationRules`/`PasswordPolicy` from Contracts and maps field error codes to `Validation_*` resx keys. Password rules render as a live checklist.
-- Date of birth: `InputDate` with `max` = today and `min` = 1900-01-01; the minimum-age message takes the value from `GET /api/public-settings` (fetched once, cached in a `PublicSettings` service).
-- Avatar: `InputFile accept="image/jpeg,image/png,image/webp"`; `IBrowserFile.RequestImageFileAsync(sameType, 512, 512)` resizes on the client; preview via data URL; Remove button. Works in MAUI Blazor Hybrid as well.
+- Date of birth: a text input in the app language's day/month/year order (`DateInput`: placeholder `dd/mm/aaaa` / `dd/mm/yyyy`, also accepts 8 digits without separators), because the native date picker follows the browser's language, not the app's; range 1900-01-01..today; the minimum-age message takes the value from `GET /api/public-settings` (fetched once, cached in a `PublicSettings` service).
+- Avatar: `InputFile accept="image/jpeg,image/png,image/webp"`; `IBrowserFile.RequestImageFileAsync(sameType, 512, 512)` resizes on the client behind an `IImageResizer` seam (bUnit cannot call it on test files); preview via data URL; Remove button. Works in MAUI Blazor Hybrid as well.
+- Google mode shows the Google email as plain text (not an input), so it cannot be edited.
 - Google pre-fill: `PendingGoogleRegistration` (RCL, in-memory singleton) holds the ticket/profile between Sign In and Sign Up; it is lost on reload, giving the plain email form (spec scenario).
 
 ### D10. Google sign-in on the client
